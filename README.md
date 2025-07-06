@@ -89,6 +89,25 @@ npm start
 - **パッケージマネージャー**: npm
 - **ホットリロード**: React Scripts (Create React App)
 
+## package.jsonの変更点
+
+DevContainer環境でのホットリロード機能を確実に動作させるため、`package.json`の`start`スクリプトをデフォルトから変更しています：
+
+```json
+"start": "CHOKIDAR_USEPOLLING=true WATCHPACK_POLLING=true react-scripts start"
+```
+
+### 追加された環境変数
+
+- **CHOKIDAR_USEPOLLING=true**: Chokidar（ファイル監視ライブラリ）にポーリングモードを強制
+- **WATCHPACK_POLLING=true**: Webpackのファイル監視にポーリングモードを強制
+
+### 変更理由
+
+DevContainer環境では、ファイルシステムの監視が通常のinotifyベースの監視では正しく動作しない場合があります。特にWindowsホストからLinuxコンテナへのマウント時に、ファイル変更イベントが適切に伝播されないことがあります。
+
+ポーリングモードを有効にすることで、定期的にファイルの変更をチェックし、確実にホットリロードが動作するようになります。
+
 ## DevContainer設定詳細
 
 ### 基本設定
