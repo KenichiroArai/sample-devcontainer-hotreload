@@ -24,7 +24,7 @@ sample-devcontainer-hotreload/
 
 - **DevContainer対応**: VS CodeでDevContainerを使用して開発環境を統一
 - **ホットリロード**: ファイル変更時に自動でブラウザが更新される
-- **React 18**: 最新のReact機能を利用
+- **React 19**: 最新のReact機能を利用
 - **開発環境の統一**: チーム全体で同じ開発環境を共有可能
 - **自動セットアップ**: コンテナ作成時に自動でnpm installが実行される
 - **パフォーマンス最適化**: node_modulesをNamed volumeで管理
@@ -118,7 +118,7 @@ npm start
 
 ## 技術スタック
 
-- **フロントエンド**: React 18
+- **フロントエンド**: React 19
 - **開発環境**: DevContainer
 - **Node.js**: 22 (Bookworm)
 - **パッケージマネージャー**: npm
