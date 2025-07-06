@@ -39,6 +39,8 @@ sample-devcontainer-hotreload/
 
 ### 手順
 
+#### 方法1: 既存のReactプロジェクトを使用する場合
+
 1. このリポジトリをクローン
 
     ```bash
@@ -61,6 +63,39 @@ sample-devcontainer-hotreload/
     ```
 
 **注意**: 依存関係のインストールは`postCreateCommand`により自動で実行されるため、手動で`npm install`を実行する必要はありません。
+
+#### 方法2: 新しくReactプロジェクトを作成する場合
+
+1. 空のディレクトリを作成し、VS Codeで開く
+
+2. DevContainer設定ファイルを作成（`.devcontainer/devcontainer.json`）
+
+3. **重要**: 最初はmounts設定をコメントアウトまたは削除する
+
+    ```json
+    // "mounts": [
+    //     "source=${localWorkspaceFolderBasename}-my-app-node-modules,target=/workspaces/${localWorkspaceFolderBasename}/my-app/node_modules,type=volume"
+    // ]
+    ```
+
+4. DevContainerで開く
+
+5. コンテナ内でReactプロジェクトを作成
+
+    ```bash
+    npx create-react-app my-app
+    ```
+
+6. コンテナを終了し、`.devcontainer/devcontainer.json`のmounts設定を有効にする
+
+7. DevContainerを再作成（Rebuild Container）
+
+8. アプリケーションを起動
+
+    ```bash
+    cd my-app
+    npm start
+    ```
 
 ## 使用方法
 
@@ -126,6 +161,27 @@ DevContainer環境では、ファイルシステムの監視が通常のinotify�
 - **ファイル監視除外**: node_modulesディレクトリを監視対象外
 - **ファイル除外**: node_modulesディレクトリをエクスプローラーから非表示
 
+### 重要な設定項目
+
+#### Reactプロジェクト名の設定
+
+このプロジェクトでは、Reactアプリケーションのディレクトリ名を`my-app`として設定しています。この名前は以下の設定で使用されています：
+
+- **postCreateCommand**: `cd my-app && npm install`
+- **mounts設定**: `target=/workspaces/${localWorkspaceFolderBasename}/my-app/node_modules`
+
+もし異なる名前でReactプロジェクトを作成する場合は、これらの設定を適切に変更する必要があります。
+
+#### mounts設定の注意点
+
+```json
+"mounts": [
+    "source=${localWorkspaceFolderBasename}-my-app-node-modules,target=/workspaces/${localWorkspaceFolderBasename}/my-app/node_modules,type=volume"
+]
+```
+
+この設定により、`node_modules`ディレクトリがNamed volumeとして管理され、コンテナ再作成時も依存関係が保持されます。ただし、**Reactプロジェクト作成前にこの設定を有効にすると、プロジェクト作成が妨げられる可能性がある**ため、上記の手順に従って設定してください。
+
 ## トラブルシューティング
 
 ### DevContainerが起動しない場合
@@ -144,6 +200,19 @@ DevContainer環境では、ファイルシステムの監視が通常のinotify�
 
 1. コンテナを再作成（Dev Containers: Rebuild Container）
 2. 手動で`npm install`を実行
+
+### Reactプロジェクトが作成できない場合
+
+1. mounts設定が有効になっていないか確認
+2. 必要に応じてmounts設定を一時的にコメントアウト
+3. Reactプロジェクト作成後にmounts設定を有効化
+4. コンテナを再作成
+
+### node_modulesが正しくマウントされない場合
+
+1. Named volumeが正しく作成されているか確認
+2. コンテナを再作成（Dev Containers: Rebuild Container）
+3. 必要に応じてDocker volumeを手動で削除して再作成
 
 ## ライセンス
 
