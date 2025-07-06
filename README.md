@@ -11,6 +11,7 @@ DevContainerでReactアプリケーションをホットリロード機能付き
 ```bash
 sample-devcontainer-hotreload/
 ├── .devcontainer/          # DevContainer設定ファイル
+│   └── devcontainer.json   # DevContainer設定
 ├── my-app/                 # Reactアプリケーション
 │   ├── package.json        # 依存関係とスクリプト
 │   ├── public/             # 静的ファイル
@@ -25,6 +26,8 @@ sample-devcontainer-hotreload/
 - **ホットリロード**: ファイル変更時に自動でブラウザが更新される
 - **React 18**: 最新のReact機能を利用
 - **開発環境の統一**: チーム全体で同じ開発環境を共有可能
+- **自動セットアップ**: コンテナ作成時に自動でnpm installが実行される
+- **パフォーマンス最適化**: node_modulesをNamed volumeで管理
 
 ## セットアップ
 
@@ -39,7 +42,7 @@ sample-devcontainer-hotreload/
 1. このリポジトリをクローン
 
     ```bash
-    git clone <repository-url>
+    git clone https://github.com/KenichiroArai/sample-devcontainer-hotreload.git
     cd sample-devcontainer-hotreload
     ```
 
@@ -56,6 +59,8 @@ sample-devcontainer-hotreload/
     cd my-app
     npm start
     ```
+
+**注意**: 依存関係のインストールは`postCreateCommand`により自動で実行されるため、手動で`npm install`を実行する必要はありません。
 
 ## 使用方法
 
@@ -80,8 +85,27 @@ npm start
 
 - **フロントエンド**: React 18
 - **開発環境**: DevContainer
+- **Node.js**: 22 (Bookworm)
 - **パッケージマネージャー**: npm
 - **ホットリロード**: React Scripts (Create React App)
+
+## DevContainer設定詳細
+
+### 基本設定
+
+- **ベースイメージ**: `mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm`
+- **ユーザー**: `node`（非rootユーザー）
+- **ポート転送**: 3000番ポート
+
+### 自動化
+
+- **postCreateCommand**: コンテナ作成時に`cd my-app && npm install`を自動実行
+- **Named volume**: node_modulesをボリュームで管理し、パフォーマンスを向上
+
+### VS Code設定
+
+- **ファイル監視除外**: node_modulesディレクトリを監視対象外
+- **ファイル除外**: node_modulesディレクトリをエクスプローラーから非表示
 
 ## トラブルシューティング
 
@@ -96,6 +120,11 @@ npm start
 1. ポート3000が正しく公開されていることを確認
 2. ブラウザのキャッシュをクリア
 3. 開発サーバーを再起動
+
+### 依存関係のインストールエラー
+
+1. コンテナを再作成（Dev Containers: Rebuild Container）
+2. 手動で`npm install`を実行
 
 ## ライセンス
 
