@@ -1,0 +1,35 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/javascript-node
+{
+	"name": "Node.js",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"image": "mcr.microsoft.com/devcontainers/javascript-node:1-22-bookworm",
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	// "features": {},
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	"forwardPorts": [
+		3000
+	],
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "cd my-app && npm install",
+	// Configure tool-specific properties.
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"files.watcherExclude": {
+					"**/node_modules/**": true
+				},
+				"files.exclude": {
+					"**/node_modules": true
+				}
+			}
+		}
+	},
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+	"remoteUser": "node",
+	// Named volumeを使用してnode_modulesを対象外にする
+	"mounts": [
+		"source=${localWorkspaceFolderBasename}-my-app-node-modules,target=/workspaces/${localWorkspaceFolderBasename}/my-app/node_modules,type=volume"
+	]
+}
